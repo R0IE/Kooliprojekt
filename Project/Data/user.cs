@@ -2,7 +2,7 @@
 
 namespace KooliProjekt.Data
 {
-    public class user
+    public class User
     {
         public string Id {  get; set; }
         public string Name { get; set; }

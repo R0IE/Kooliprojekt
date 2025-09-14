@@ -1,6 +1,6 @@
 ﻿namespace KooliProjekt.Data
 {
-    public class worklogs
+    public class WorkLogs
     {
 
         public string Id { get; set; }

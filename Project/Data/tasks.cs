@@ -2,7 +2,7 @@
 
 namespace KooliProjekt.Data
 {
-    public class tasks
+    public class Tasks
     {
 
         public string Id { get; set; }
