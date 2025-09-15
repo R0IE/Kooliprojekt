@@ -14,7 +14,7 @@ namespace KooliProjekt.Controllers
 
         public IActionResult Index(int page = 1, int pageSize = 10)
         {
-            var team_members = _dataContext.Team_Members.GetPagedAsync(page, pageSize);
+            var team_members = _dataContext.TeamMembers.GetPagedAsync(page, pageSize);
 
             return View(team_members);
         }

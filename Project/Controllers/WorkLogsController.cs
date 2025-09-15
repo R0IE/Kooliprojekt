@@ -16,7 +16,7 @@ namespace KooliProjekt.Controllers
         // GET: WorkLogsController
         public ActionResult Index(int page = 1, int pageSize = 10)
         {
-            var workLogs = _dataContext.worklogs.GetPagedAsync(page, pageSize);
+            var workLogs = _dataContext.WorkLogs.GetPagedAsync(page, pageSize);
 
             return View(workLogs);
         }
