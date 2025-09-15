@@ -1,11 +1,9 @@
 ﻿namespace KooliProjekt.Data
 {
-    public class team_members
+    public class TeamMembers : Entity
     {
-        public string Id { get; set; }
-
-        public string UserId { get; set; }
-
-        public string ProjectId { get; set; }
+        public new int Id { get; set; }
+        public int UserId { get; set; }
+        public int ProjectId { get; set; }
     }
 }
