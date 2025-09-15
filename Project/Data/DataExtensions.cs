@@ -1,12 +1,15 @@
+using KooliProjekt.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Kooliprojekt;
 
-namespace Kooliprojekt.Data
+namespace KooliProjekt.Data
 {
     public static class DataExtensions
     {
         public static async Task<PagedResult<T>> GetPagedAsync<T>(this IQueryable<T> query, int page, int pageSize)
         {
+            page = Math.Max(page, 1);
+
             var result = new PagedResult<T>
             {
                 CurrentPage = page,
@@ -20,6 +23,8 @@ namespace Kooliprojekt.Data
             var skip = (page - 1) * pageSize;
 
             result.Results = await query.Skip(skip).Take(pageSize).ToListAsync();
+
+            return result;
         }
     }
 }

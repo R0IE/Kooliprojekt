@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using Kooliprojekt.Data;
+using KooliProjekt.Data;
 
-namespace Kooliprojekt.Components
+namespace KooliProjekt.Components
 {
-	public class PagerViewComponent : ViewComponent
-	{
-		public async Task<IViewComponentResult> InvokeAsync(PagedResultBase result, string viewName)
-		{
-			result.LinkTemplate = Url.Action(RouteData.Values["action"].ToString(), new { page = "{0}" });
+    public class PagerViewComponent : ViewComponent
+    {
+        public async Task<IViewComponentResult> InvokeAsync(PagedResultBase result, string viewName)
+        {
+            result.LinkTemplate = Url.Action(RouteData.Values["action"].ToString(), new { page = "{0}" });
 
-			return await Task.FromResult(View(viewName, result));
-		}
-	}
+            return await Task.FromResult(View(viewName, result));
+        }
+    }
 }
