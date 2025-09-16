@@ -1,0 +1,60 @@
+﻿@model KooliProjekt.Data.Tasks
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Tasks</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TaskStart)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TaskStart)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpectedTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ExpectedTime)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.InCharge)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.InCharge)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkDone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkDone)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Files)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Files)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

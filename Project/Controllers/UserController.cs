@@ -16,7 +16,7 @@ namespace KooliProjekt.Controllers
         // GET: UserController
         public ActionResult Index(int page = 1, int pageSize = 10)
         {
-            var users = _dataContext.user.GetPagedAsync(page, pageSize);
+            var users = _dataContext.User.GetPagedAsync(page, pageSize);
 
             return View(users);
         }

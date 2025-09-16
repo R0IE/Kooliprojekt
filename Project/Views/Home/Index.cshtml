@@ -1,8 +1,18 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Welcome</h1>
+
+<p>Quick links to main pages:</p>
+
+<ul>
+    <li><a asp-controller="Project" asp-action="Index">Projects</a></li>
+    <li><a asp-controller="Tasks" asp-action="Index">Tasks</a></li>
+    <li><a asp-controller="Team_Members" asp-action="Index">Team Members</a></li>
+    <li><a asp-controller="WorkLogs" asp-action="Index">Work Logs</a></li>
+    <li><a asp-controller="User" asp-action="Index">Users</a></li>
+</ul>
+
+<!-- Optional: render a view fragment from another folder (only if it does not require a model) -->
+@* Example: @Html.Partial("~/Views/Project/_SomePartial.cshtml") *@

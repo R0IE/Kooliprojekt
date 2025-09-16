@@ -1,23 +1,22 @@
-﻿using Microsoft.Identity.Client;
+﻿using System;
 
 namespace KooliProjekt.Data
 {
-    public class Tasks
+    public class Tasks : Entity
     {
-
-        public string Id { get; set; }
+        public new int Id { get; set; }
 
         public string Title { get; set; }
 
-        public string TaskStart { get; set; }
+        public DateTime TaskStart { get; set; }
 
-        public string ExpectedTime { get; set; }
+        public TimeSpan ExpectedTime { get; set; }
 
-        public string InCharge { get; set; }
+        public Boolean InCharge { get; set; }
 
-        public string Describtion { get; set; }
+        public string? Description { get; set; }
 
-        public string WorkDone { get; set; }
+        public Boolean WorkDone { get; set; }
 
         public string Files { get; set; }
     }

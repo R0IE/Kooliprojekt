@@ -25,5 +25,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\WorkLogs\" />
+    <Folder Include="Views\User\" />
+    <Folder Include="Views\Tasks\" />
+  </ItemGroup>
 
 </Project>
