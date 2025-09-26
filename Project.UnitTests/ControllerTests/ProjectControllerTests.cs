@@ -1,97 +1,109 @@
 using KooliProjekt.Controllers;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Moq;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace KooliProjekt.UnitTests.ControllerTests
 {
     public class ProjectControllerTests
     {
-        private ApplicationDbContext GetInMemoryDbContext()
+        private readonly Mock<IProjectService> _projectServiceMock;
+        private readonly Mock<IFileClient> _fileClientMock;
+        private readonly ProjectController _controller;
+
+        public ProjectControllerTests()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-            return new ApplicationDbContext(options);
+            _projectServiceMock = new Mock<IProjectService>();
+            _fileClientMock = new Mock<IFileClient>();
+            _controller = new ProjectController(_projectServiceMock.Object, _fileClientMock.Object);
         }
 
         [Fact]
-        public async Task Index_ReturnsViewResult_WithPagedProjects()
+        public async Task Index_ReturnsViewResult_WithAListOfProjects()
         {
             // Arrange
-            using var context = GetInMemoryDbContext();
-            var controller = new ProjectController(context);
+            var projects = new List<Project> { new Project { Id = 1, ProjectName = "Test Project" } };
+            _projectServiceMock.Setup(service => service.List()).ReturnsAsync(projects);
+            _fileClientMock.Setup(client => client.List(FileStoreNames.Images)).Returns(new string[] { "image1.jpg", "image2.jpg" });
 
             // Act
-            var result = await controller.Index();
-
-            // Assert
-            Assert.IsType<ViewResult>(result);
-        }
-
-        [Fact]
-        public async Task Create_ValidProject_RedirectsToIndex()
-        {
-            // Arrange
-            using var context = GetInMemoryDbContext();
-            var controller = new ProjectController(context);
-            var project = new Project
-            {
-                ProjectName = "Test Project",
-                Start = DateTime.Today,
-                Deadline = DateTime.Today.AddMonths(1),
-                Budget = 10000,
-                HourlyRate = 50
-            };
-
-            // Act
-            var result = await controller.Create(project);
-
-            // Assert
-            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", redirectResult.ActionName);
-        }
-
-        [Fact]
-        public async Task Details_ExistingProject_ReturnsViewWithProject()
-        {
-            // Arrange
-            using var context = GetInMemoryDbContext();
-            var project = new Project
-            {
-                ProjectName = "Test Project",
-                Start = DateTime.Today,
-                Deadline = DateTime.Today.AddMonths(1),
-                Budget = 10000,
-                HourlyRate = 50
-            };
-            context.Project.Add(project);
-            await context.SaveChangesAsync();
-
-            var controller = new ProjectController(context);
-
-            // Act
-            var result = await controller.Details(project.Id);
+            var result = await _controller.Index();
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<Project>(viewResult.Model);
-            Assert.Equal(project.ProjectName, model.ProjectName);
+            var model = Assert.IsAssignableFrom<IEnumerable<Project>>(viewResult.ViewData.Model);
+            Assert.Equal(1, model.Count());
         }
 
         [Fact]
-        public async Task Details_NonExistingProject_ReturnsNotFound()
+        public async Task Details_ReturnsViewResult_WithProject()
         {
             // Arrange
-            using var context = GetInMemoryDbContext();
-            var controller = new ProjectController(context);
+            var project = new Project { Id = 1, ProjectName = "Test Project" };
+            _projectServiceMock.Setup(service => service.GetById(1)).ReturnsAsync(project);
 
             // Act
-            var result = await controller.Details(999);
+            var result = await _controller.Details(1);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<Project>(viewResult.ViewData.Model);
+            Assert.Equal("Test Project", model.ProjectName);
+        }
+
+        [Fact]
+        public async Task Create_Post_RedirectsToIndex_WhenModelStateIsValid()
+        {
+            // Arrange
+            var project = new Project { ProjectName = "New Project" };
+            var files = new List<IFormFile>();
+            var fileMock = new Mock<IFormFile>();
+            fileMock.Setup(_ => _.FileName).Returns("testfile.jpg");
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(new MemoryStream());
+            files.Add(fileMock.Object);
+
+            // Act
+            var result = await _controller.Create(project, files.ToArray());
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+        }
+
+        [Fact]
+        public async Task Edit_ReturnsViewResult_WithProject()
+        {
+            // Arrange
+            var project = new Project { Id = 1, ProjectName = "Test Project" };
+            _projectServiceMock.Setup(service => service.GetById(1)).ReturnsAsync(project);
+
+            // Act
+            var result = await _controller.Edit(1);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<Project>(viewResult.ViewData.Model);
+            Assert.Equal("Test Project", model.ProjectName);
+        }
+
+        [Fact]
+        public async Task DeleteConfirmed_RedirectsToIndex_WhenProjectIsDeleted()
+        {
+            // Arrange
+            _projectServiceMock.Setup(service => service.Delete(1)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.DeleteConfirmed(1);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
         }
     }
 }

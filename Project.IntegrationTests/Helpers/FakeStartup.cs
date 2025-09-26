@@ -33,12 +33,8 @@ namespace KooliProjekt.IntegrationTests.Helpers
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             //services.AddAutoMapper(GetType().Assembly);
-        services.AddControllersWithViews(options =>
-            {
-            // In tests we don't want antiforgery validation to block POSTs
-            options.Filters.Add(new Microsoft.AspNetCore.Mvc.IgnoreAntiforgeryTokenAttribute());
-            })
-            .AddApplicationPart(typeof(HomeController).Assembly);
+            services.AddControllersWithViews()
+                    .AddApplicationPart(typeof(HomeController).Assembly);
 
             services.AddScoped<IFileClient, LocalFileClient>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
@@ -51,7 +47,7 @@ namespace KooliProjekt.IntegrationTests.Helpers
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IWorkLogsRepository, WorkLogsRepository>();
             services.AddScoped<IWorkLogsService, WorkLogsService>();
-            // duplicate registration removed
+            services.AddScoped<IFileClient, LocalFileClient>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

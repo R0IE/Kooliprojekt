@@ -1,6 +1,7 @@
 ﻿using KooliProjekt.Controllers;
 using KooliProjekt.Data;
 using KooliProjekt.Services;
+using KooliProjekt.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -29,8 +30,9 @@ namespace KooliProjekt.UnitTests.ServiceTests
         public async Task Index_ReturnsViewResult_WithAListOfProjects()
         {
             // Arrange
-            var projects = new List<Project> { new Project { Id = 1, ProjectName = "Test Project" } };
-            _projectServiceMock.Setup(service => service.List()).ReturnsAsync(projects);
+            var paged = new PagedResult<Project>();
+            paged.Results.Add(new Project { Id = 1, ProjectName = "Test Project" });
+            _projectServiceMock.Setup(service => service.List(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(paged);
             _fileClientMock.Setup(client => client.List(FileStoreNames.Images)).Returns(new string[] { "image1.jpg", "image2.jpg" });
 
             // Act
@@ -38,8 +40,8 @@ namespace KooliProjekt.UnitTests.ServiceTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<Project>>(viewResult.ViewData.Model);
-            Assert.Equal(1, model.Count());
+            var model = Assert.IsAssignableFrom<PagedResult<Project>>(viewResult.ViewData.Model);
+            Assert.Equal(1, model.Results.Count);
         }
 
         [Fact]

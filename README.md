@@ -14,6 +14,7 @@
 ### Running Unit Tests
 ```bash
 cd Project.UnitTests
+.\run-tests.ps1
 dotnet test
 ```
 

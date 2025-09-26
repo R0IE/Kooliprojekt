@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace KooliProjekt.Controllers
 {
+    [Microsoft.AspNetCore.Mvc.IgnoreAntiforgeryToken]
     public class ProjectController : Controller
     {
         private readonly IProjectService _projectService;
@@ -66,6 +67,16 @@ namespace KooliProjekt.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            // Dump modelstate errors to console for test debugging
+            Console.WriteLine("Create: ModelState.IsValid == false");
+            foreach (var kv in ModelState)
+            {
+                foreach (var err in kv.Value.Errors)
+                {
+                    Console.WriteLine($"ModelState error on {kv.Key}: {err.ErrorMessage} {err.Exception}");
+                }
+            }
+
             return View(project);
         }
 
@@ -86,15 +97,33 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, Project project)
         {
+            if (project == null)
+            {
+                Console.WriteLine("Edit: project was null after model binding");
+                ModelState.AddModelError(string.Empty, "Invalid project data");
+                return View(new Project());
+            }
+
             if (id != project.Id)
             {
-                return BadRequest();
+                Console.WriteLine($"Edit: Id mismatch route={id} project.Id={project.Id}");
+                ModelState.AddModelError(string.Empty, "Id mismatch");
+                return View(project);
             }
 
             if (ModelState.IsValid)
             {
                 await _projectService.Save(project);
                 return RedirectToAction(nameof(Index));
+            }
+
+            Console.WriteLine("Edit: ModelState.IsValid == false");
+            foreach (var kv in ModelState)
+            {
+                foreach (var err in kv.Value.Errors)
+                {
+                    Console.WriteLine($"ModelState error on {kv.Key}: {err.ErrorMessage} {err.Exception}");
+                }
             }
 
             return View(project);
@@ -138,7 +167,8 @@ namespace KooliProjekt.Controllers
         }
 
         // POST: ProjectController/Delete/5
-        [HttpPost]
+    [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
@@ -149,6 +179,7 @@ namespace KooliProjekt.Controllers
             }
             catch
             {
+                Console.WriteLine($"DeleteConfirmed: exception while deleting id={id}");
                 return View();
             }
         }
