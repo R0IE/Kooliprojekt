@@ -12,7 +12,7 @@ namespace KooliProjekt.Data
 
         public DbSet<Tasks> Tasks { get; set; }
 
-        public DbSet<TeamMembers> Team_Members { get; set; }
+        public DbSet<TeamMembers> TeamMembers { get; set; }
 
         public DbSet<User> User { get; set; }
 

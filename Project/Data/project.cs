@@ -1,20 +1,17 @@
 ﻿namespace KooliProjekt.Data
 {
-    public class Project
+    public class Project : Entity
     {
-
-        public string Id { get; set; }
-
         public string ProjectName { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime Deadline { get; set; }
+        public decimal Budget { get; set; }
+        public decimal HourlyRate { get; set; }
+        // The DB schema (initial migration) contains a Description column. Ensure it is non-null when inserting.
+        public string Description { get; set; } = string.Empty;
 
-        public string Start { get; set; }
-
-        public string Deadline { get; set; }
-
-        public string Budget { get; set; }
-
-        public string HourlyRate { get; set; }
-
-        public string Team { get; set; }
+        // `Team` is a newer property the UI may use. Keep it optional (nullable) and not mapped to the DB.
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public string? Team { get; set; }
     }
 }

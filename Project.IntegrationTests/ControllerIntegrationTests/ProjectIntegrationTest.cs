@@ -1,0 +1,182 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Net;
+using System.Net.Http;
+using KooliProjekt.IntegrationTests.Helpers;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Xunit;
+using KooliProjekt.IntegrationTests.Helpers;
+using KooliProjekt.Data;
+
+namespace KooliProjekt.IntegrationTests.ControllerIntegrationTests
+{
+    public class ProjectControllerTests : TestBase
+    {
+        public ProjectControllerTests()
+        {
+
+        }
+
+        [Theory]
+        [InlineData("/Project")]
+        [InlineData("/Project/Details/1")]
+        [InlineData("/Project/Edit/1")]
+        [InlineData("/Project/Delete/1")]
+        public async Task Get_EndpointsReturnSuccessAndCorrectContentType(string url)
+        {
+            //Arrange
+            var client = Factory.CreateClient();
+            var context = (ApplicationDbContext)Factory.Services.GetService(typeof(ApplicationDbContext));
+            var project = new Project { ProjectName = "Test project" };
+            context.Database.EnsureCreated();
+            context.Project.Add(project);
+            await context.SaveChangesAsync();
+
+            // Act
+            var response = await client.GetAsync(url);
+
+            context.Database.EnsureDeleted();
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
+        }
+
+        [Fact]
+        public async Task Edit_EndpointReturnSuccessForCorrectModel()
+        {
+            //Arrange
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+
+            var id = 1;
+
+            var formValues = new Dictionary<string, string>();
+            formValues.Add("Id", $"{id}");
+            formValues.Add("ProjectName", "Pehme Vesi");
+            formValues.Add("Start", "2023, 10, 23");
+            formValues.Add("DeadLine", "2024, 01, 23");
+            formValues.Add("Budget", "5");
+            formValues.Add("HourlyRate", "3");
+            formValues.Add("Team", "#1");
+
+
+
+            var content = new FormUrlEncodedContent(formValues);
+
+            // Act
+            var response = await client.PostAsync("/Project/Edit/" + id, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+
+        }
+
+        [Fact]
+        public async Task Edit_StaysOnThePageOnInvalidValidation()
+        {
+            // Arrange
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+            var id = -1;
+
+            var formValues = new Dictionary<string, string>();
+            formValues.Add("Id", $"{id}");
+            formValues.Add("ProjectName", "Pehme Vesi");
+            formValues.Add("Start", "2023, 10, 23");
+            formValues.Add("DeadLine", "2024, 01, 23");
+            formValues.Add("Budget", "5");
+            formValues.Add("HourlyRate", "3");
+            formValues.Add("Team", "#1");
+
+            var content = new FormUrlEncodedContent(formValues);
+
+            // Act
+            var response = await client.PostAsync("/Project/Edit/" + id, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+        [Fact]
+        public async Task Delete_EndpointReturnSuccessForCorrectModel()
+        {
+            // Arrange
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+            var id = 1;
+
+            //Act
+            var response = await client.PostAsync("/Project/Delete/" + id, null);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Create_EndpointReturnSuccessForCorrectModel()
+        {
+            // Arrange
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+
+            int id = 1;
+
+            var formValues = new Dictionary<string, string>();
+            formValues.Add("Id", $"{id}");
+            formValues.Add("ProjectName", "Pehme Vesi");
+            formValues.Add("Start", "2023, 10, 23");
+            formValues.Add("DeadLine", "2024, 01, 23");
+            formValues.Add("Budget", "5");
+            formValues.Add("HourlyRate", "3");
+            formValues.Add("Team", "#1");
+
+            var content = new FormUrlEncodedContent(formValues);
+
+            // Act
+            var response = await client.PostAsync("/Project/Create/", content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Create_StaysOnThePageOnInvalidValidation()
+        {
+            // Arrange
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+
+            int invalidId = -1;
+
+            var formValues = new Dictionary<string, string>();
+            formValues.Add("Id", $"{invalidId}");
+            formValues.Add("ProjectName", "Pehme Vesi");
+            formValues.Add("Start", "2023, 10, 23");
+            formValues.Add("DeadLine", "2024, 01, 23");
+            formValues.Add("Budget", "5");
+            formValues.Add("HourlyRate", "3");
+            formValues.Add("Team", "#1");
+
+            var content = new FormUrlEncodedContent(formValues);
+
+            // Act
+            var response = await client.PostAsync("/Project/Create/", content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+    }
+}

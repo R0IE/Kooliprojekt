@@ -4,6 +4,10 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KooliProjekt", "Project\KooliProjekt.csproj", "{37A7D004-F240-1FA1-8A77-B27531577293}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KooliProjekt.UnitTests", "Project.UnitTests\KooliProjekt.UnitTests.csproj", "{B2A73D93-8A15-4B5C-9E76-2C8F5D7F1234}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KooliProjekt.IntegrationTests", "Project.IntegrationTests\KooliProjekt.IntegrationTests.csproj", "{C3B84E94-9B26-5C6D-AF87-3D9F6E8G2345}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +18,14 @@ Global
 		{37A7D004-F240-1FA1-8A77-B27531577293}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37A7D004-F240-1FA1-8A77-B27531577293}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37A7D004-F240-1FA1-8A77-B27531577293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2A73D93-8A15-4B5C-9E76-2C8F5D7F1234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A73D93-8A15-4B5C-9E76-2C8F5D7F1234}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A73D93-8A15-4B5C-9E76-2C8F5D7F1234}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A73D93-8A15-4B5C-9E76-2C8F5D7F1234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3B84E94-9B26-5C6D-AF87-3D9F6E8G2345}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B84E94-9B26-5C6D-AF87-3D9F6E8G2345}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3B84E94-9B26-5C6D-AF87-3D9F6E8G2345}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B84E94-9B26-5C6D-AF87-3D9F6E8G2345}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

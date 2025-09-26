@@ -1,29 +1,41 @@
 ﻿using KooliProjekt.Data;
+using KooliProjekt.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KooliProjekt.Controllers
 {
     public class TasksController : Controller
     {
-        private readonly ApplicationDbContext _dataContext;
+        private readonly ITasksService _tasksService;
 
-        public TasksController(ApplicationDbContext dataContext)
+        public TasksController(ITasksService tasksService)
         {
-            _dataContext = dataContext;
+            _tasksService = tasksService;
         }
 
         // GET: TasksController
-        public ActionResult Index(int page = 1, int pageSize = 10)
+        public async Task<ActionResult> Index(int page = 1, int pageSize = 10)
         {
-            var tasks = _dataContext.Tasks.GetPagedAsync(page, pageSize);
+            var tasks = await _tasksService.List(page, pageSize);
 
             return View(tasks);
         }
 
         // GET: TasksController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tasks = await _tasksService.GetById(id.Value);
+            if (tasks == null)
+            {
+                return NotFound();
+            }
+
+            return View(tasks);
         }
 
         // GET: TasksController/Create
@@ -35,52 +47,91 @@ namespace KooliProjekt.Controllers
         // POST: TasksController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Tasks tasks)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _tasksService.Save(tasks);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    // Log exception (left as console for now) and show generic error
+                    Console.WriteLine(ex);
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving the task.");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(tasks);
+            //return BadRequest(ModelState);
         }
 
         // GET: TasksController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var Tasks = await _tasksService.GetById(id.Value);
+            if (Tasks == null)
+            {
+                return NotFound();
+            }
+            return View(Tasks);
         }
 
         // POST: TasksController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Tasks tasks)
         {
-            try
+            if (id != tasks.Id)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            if (!ModelState.IsValid)
             {
-                return View();
+                return View(tasks);
             }
+
+            await _tasksService.Save(tasks);
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: TasksController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tasks = await _tasksService.GetById(id.Value);
+            if (tasks == null)
+            {
+                return NotFound();
+            }
+
+            return View(tasks);
         }
 
         // POST: TasksController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
             try
             {
+                await _tasksService.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

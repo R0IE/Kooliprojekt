@@ -3,3 +3,56 @@
 *@
 @{
 }
+@model KooliProjekt.Models.PagedResult<KooliProjekt.Data.Tasks>
+
+@{
+    ViewData["Title"] = "Tasks";
+}
+
+<h1>Tasks</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Task</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Start</th>
+            <th>Expected</th>
+            <th>Project</th>
+            <th>Assigned</th>
+            <th>Done</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (Model?.Results != null)
+    {
+        foreach (var item in Model.Results)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Title</td>
+                <td>@item.TaskStart</td>
+                <td>@item.ExpectedTime</td>
+                <td>@item.ProjectId</td>
+                <td>@(item.AssignedUserId?.ToString() ?? "-")</td>
+                <td>@(item.WorkDone ? "Yes" : "No")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
+<div>
+    @await Component.InvokeAsync("Pager", new { model = Model })
+</div>
+

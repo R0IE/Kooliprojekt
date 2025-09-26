@@ -396,3 +396,24 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Ignore framework output folders that were accidentally committed in this repo
+# (these folders contain build/runtime artifacts and are safe to re-create by building)
+/Project/net*/
+/Project.UnitTests/net*/
+/Project.IntegrationTests/net*/
+/"mvp project"/net*/
+
+# Ignore publish and artifacts output
+**/publish/
+**/artifacts/
+
+# Local DB files (SQLite) and journals
+*.db
+*.db-journal
+
+# Keep important app config and IDE settings tracked — do NOT ignore these
+!/Project/appsettings.json
+!/Project/appsettings.Development.json
+!/Project/Properties/launchSettings.json
+!/.vscode/settings.json

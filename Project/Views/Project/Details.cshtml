@@ -1,0 +1,111 @@
+@model KooliProjekt.Data.Project
+
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>@Model.ProjectName</h2>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Project Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Start Date:</strong><br>@Model.Start.ToString("MMMM dd, yyyy")</p>
+                            <p><strong>Budget:</strong><br>$@Model.Budget.ToString("N2")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Deadline:</strong><br>@Model.Deadline.ToString("MMMM dd, yyyy")</p>
+                            <p><strong>Hourly Rate:</strong><br>$@Model.HourlyRate.ToString("N2")</p>
+                        </div>
+                    </div>
+                    <p><strong>Team:</strong> @Model.Team</p>
+                </div>
+            </div>
+
+            <!-- Tasks list removed: Project model no longer contains Tasks collection -->
+        </div>
+
+        <div class="col-md-4">
+            <!-- Team members list removed: Project model no longer contains TeamMembers collection -->
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Project Status</h5>
+                </div>
+                <div class="card-body">
+                    @{
+                        var totalDays = (Model.Deadline - Model.Start).TotalDays;
+                        var elapsedDays = (DateTime.Now - Model.Start).TotalDays;
+                        var progressPercentage = totalDays > 0 ? Math.Min(100, Math.Max(0, (elapsedDays / totalDays) * 100)) : 0;
+                        string statusClass = Model.Deadline < DateTime.Now ? "danger" : 
+                                           Model.Deadline < DateTime.Now.AddDays(7) ? "warning" : "success";
+                    }
+
+                    <div class="mb-3">
+                        <label class="form-label">Time Progress</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-@statusClass" role="progressbar" style="width: @progressPercentage%" 
+                                 aria-valuenow="@progressPercentage" aria-valuemin="0" aria-valuemax="100">
+                                @Math.Round(progressPercentage, 1)%
+                            </div>
+                        </div>
+                        <small class="text-muted">@Math.Round(elapsedDays) of @Math.Round(totalDays) days elapsed</small>
+                    </div>
+
+                    <div class="alert alert-@statusClass">
+                        @if (Model.Deadline < DateTime.Now)
+                        {
+                            <text><strong>Overdue:</strong> This project is past its deadline.</text>
+                        }
+                        else if (Model.Deadline < DateTime.Now.AddDays(7))
+                        {
+                            <text><strong>Due Soon:</strong> This project is due within a week.</text>
+                        }
+                        else
+                        {
+                            <text><strong>On Track:</strong> This project is progressing normally.</text>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Projects
+                </a>
+                <div>
+                    <a asp-controller="Tasks" asp-action="Create" asp-route-projectId="@Model.Id" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Add Task
+                    </a>
+                    <a asp-controller="TeamMembers" asp-action="Create" asp-route-projectId="@Model.Id" class="btn btn-info">
+                        <i class="fas fa-user-plus"></i> Add Team Member
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

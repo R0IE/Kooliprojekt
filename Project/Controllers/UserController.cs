@@ -1,34 +1,36 @@
 ﻿using KooliProjekt.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
     public class UserController : Controller
     {
-        private readonly ApplicationDbContext _dataContext;
+        private readonly IUserService _userService;
 
-        public UserController(ApplicationDbContext dataContext)
+        public UserController(IUserService userService)
         {
-            _dataContext = dataContext;
+            _userService = userService;
         }
 
         // GET: UserController
-        public ActionResult Index(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
-            var users = _dataContext.User.GetPagedAsync(page, pageSize);
-
+            var users = await _userService.List(page, pageSize);
             return View(users);
         }
 
         // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var user = await _userService.GetById(id);
+            if (user == null) return NotFound();
+            return View(user);
         }
 
         // GET: UserController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -36,58 +38,47 @@ namespace KooliProjekt.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create([Bind("Name,Email,PhoneNumber,Department")] KooliProjekt.Data.User user)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View(user);
+            await _userService.Save(user);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var user = await _userService.GetById(id);
+            if (user == null) return NotFound();
+            return View(user);
         }
 
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,PhoneNumber,Department")] KooliProjekt.Data.User user)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (id != user.Id) return BadRequest();
+            if (!ModelState.IsValid) return View(user);
+            await _userService.Save(user);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var user = await _userService.GetById(id);
+            if (user == null) return NotFound();
+            return View(user);
         }
 
         // POST: UserController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _userService.Delete(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

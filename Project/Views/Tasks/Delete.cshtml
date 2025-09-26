@@ -30,10 +30,10 @@
             @Html.DisplayFor(model => model.ExpectedTime)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.InCharge)
+            In Charge
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.InCharge)
+            @(Model.InCharge ?? "Unassigned")
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Description)
@@ -47,12 +47,7 @@
         <dd>
             @Html.DisplayFor(model => model.WorkDone)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Files)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Files)
-        </dd>
+        <!-- Files removed from model -->
     </dl>
     
     <form asp-action="Delete">

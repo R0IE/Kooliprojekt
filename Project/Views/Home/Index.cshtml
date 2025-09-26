@@ -2,17 +2,13 @@
     ViewData["Title"] = "Home";
 }
 
-<h1>Welcome</h1>
-
-<p>Quick links to main pages:</p>
-
-<ul>
-    <li><a asp-controller="Project" asp-action="Index">Projects</a></li>
-    <li><a asp-controller="Tasks" asp-action="Index">Tasks</a></li>
-    <li><a asp-controller="Team_Members" asp-action="Index">Team Members</a></li>
-    <li><a asp-controller="WorkLogs" asp-action="Index">Work Logs</a></li>
-    <li><a asp-controller="User" asp-action="Index">Users</a></li>
-</ul>
-
-<!-- Optional: render a view fragment from another folder (only if it does not require a model) -->
-@* Example: @Html.Partial("~/Views/Project/_SomePartial.cshtml") *@
+<section class="jumbotron text-center bg-light py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Manage projects — simply.</h1>
+        <p class="lead text-muted">A minimal, fast project tracker built to keep teams focused.</p>
+        <p class="mt-4">
+            <a href="/Beer" class="btn btn-primary btn-lg me-2">Browse Breweries</a>
+            <a href="/Project" class="btn btn-outline-secondary btn-lg">View Projects</a>
+        </p>
+    </div>
+</section>

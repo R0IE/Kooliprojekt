@@ -12,7 +12,8 @@ namespace KooliProjekt.Data.Validation
             RuleFor(x => x.Deadline).NotEmpty();
             RuleFor(x => x.Budget).NotEmpty();
             RuleFor(x => x.HourlyRate).NotEmpty();
-            RuleFor(x => x.Team).NotEmpty();
+            // Team is optional
+            RuleFor(x => x.Team).MaximumLength(200).When(x => !string.IsNullOrEmpty(x.Team));
         }
     }
 }

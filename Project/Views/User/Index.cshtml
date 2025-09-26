@@ -1,0 +1,40 @@
+﻿@model KooliProjekt.Models.PagedResult<KooliProjekt.Data.User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h2>Users</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach(var u in Model.Results) {
+        <tr>
+            <td>@u.Name</td>
+            <td>@u.Email</td>
+            <td>@u.PhoneNumber</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@u.Id">Details</a> |
+                <a asp-action="Edit" asp-route-id="@u.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@u.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    Page @Model.CurrentPage of @Model.PageCount
+</div>

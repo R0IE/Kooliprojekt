@@ -1,39 +1,52 @@
 ﻿<!-- BEGIN SIDEBAR -->
 <div class="sidebar col-md-3 col-sm-5">
     <ul class="list-group margin-bottom-25 sidebar-menu">
-        <li class="list-group-item clearfix"><a href="../"><i class="fa fa-angle-right"></i> Home</a></li>
-        @*<li class="list-group-item clearfix dropdown active">
-        <a href="../" class="collapsed">
-            <i class="fa fa-angle-right"></i>
-            Home
-
-        </a>
-        <ul class="dropdown-menu" style="display:block;">
-            <li class="list-group-item dropdown clearfix active">
-                <a href="shop-product-list.html" class="collapsed"><i class="fa fa-angle-right"></i> Shoes </a>
-                <ul class="dropdown-menu" style="display:block;">
-                    <li class="list-group-item dropdown clearfix">
-                        <a href="shop-product-list.html"><i class="fa fa-angle-right"></i> Classic </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> Classic 1</a></li>
-                            <li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> Classic 2</a></li>
-                        </ul>
-                    </li>
-                    <li class="list-group-item dropdown clearfix active">
-                        <a href="shop-product-list.html" class="collapsed"><i class="fa fa-angle-right"></i> Sport  </a>
-                        <ul class="dropdown-menu" style="display:block;">
-                            <li class="active"><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> Sport 1</a></li>
-                            <li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> Sport 2</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> Trainers</a></li>
-            <li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> Jeans</a></li>
-            <li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> Chinos</a></li>
-            <li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> T-Shirts</a></li>
-        </ul>
-        </li>*@
+        <li class="list-group-item clearfix">
+            <a asp-controller="Home" asp-action="Index">
+                <i class="fa fa-home"></i> Dashboard
+            </a>
+        </li>
+        <li class="list-group-item clearfix">
+            <a asp-controller="Project" asp-action="Index">
+                <i class="fa fa-folder-open"></i> Projects
+            </a>
+        </li>
+        <li class="list-group-item clearfix">
+            <a asp-controller="Tasks" asp-action="Index">
+                <i class="fa fa-tasks"></i> Tasks
+            </a>
+        </li>
+        <li class="list-group-item clearfix">
+            <a asp-controller="TeamMembers" asp-action="Index">
+                <i class="fa fa-users"></i> Team Members
+            </a>
+        </li>
+        <li class="list-group-item clearfix">
+            <a asp-controller="User" asp-action="Index">
+                <i class="fa fa-user"></i> Users
+            </a>
+        </li>
+        <li class="list-group-item clearfix">
+            <a asp-controller="WorkLogs" asp-action="Index">
+                <i class="fa fa-clock-o"></i> Work Logs
+            </a>
+        </li>
     </ul>
+
+    <!-- Quick Actions -->
+    <div class="content-search margin-bottom-20">
+        <h3>Quick Actions</h3>
+        <div class="input-group">
+            <a asp-controller="Project" asp-action="Create" class="btn btn-primary btn-block margin-bottom-10">
+                <i class="fa fa-plus"></i> New Project
+            </a>
+            <a asp-controller="Tasks" asp-action="Create" class="btn btn-success btn-block margin-bottom-10">
+                <i class="fa fa-tasks"></i> New Task
+            </a>
+            <a asp-controller="User" asp-action="Create" class="btn btn-info btn-block">
+                <i class="fa fa-user-plus"></i> New User
+            </a>
+        </div>
+    </div>
 </div>
 <!-- END SIDEBAR -->
